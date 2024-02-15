@@ -71,4 +71,18 @@ class BathroomController(
             ResponseEntity(apiResponse, HttpStatus.OK)
         }
     }
+    @DeleteMapping("/delete")
+    fun DeleteBathRoomInfo(@RequestParam("number") id: Long): ResponseEntity<Any> {
+        val isDeleted = bathroomService.DeleteBathRoom(id)
+        if (isDeleted == 0) {
+            val apiResponse: ApiResponse<Any> = ApiResponse.error(ReturnCode.RC404.code, "No bathroom found to delete")
+            return ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST)
+        } else if (isDeleted == 1) {
+            val apiResponse = ApiResponse.success("Bathroom deleted successfully")
+            return ResponseEntity(apiResponse, HttpStatus.OK)
+        } else {
+            val apiResponse: ApiResponse<Any> = ApiResponse.error(ReturnCode.RC400.code, "Failed to delete bathroom")
+            return ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST)
+        }
+    }
 }

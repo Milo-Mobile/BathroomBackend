@@ -87,6 +87,28 @@ class BathroomService(
         }
         return null
     }
+    fun DeleteBathRoom(id: Long) : Int {
+        logger.info("Deleting a bathroom")
+        try {
+            val bathroom = bathroomRepository.findById(id).orElse(null)
+            if (bathroom == null) {
+                logger.error("Bathroom not found")
+                return 0
+            } else {
+                bathroomRepository.deleteById(id)
+                val isDeleted = bathroomRepository.findById(id).orElse(null)
+                if (isDeleted == null){
+                    logger.info("Bathroom deleted")
+                    return 1
+                }  else {
+                    logger.error("Failed to delete bathroom")
+                }
+            }
+        } catch (e: Exception) {
+            logger.error("Failed to delete bathroom info: {}", e.message, e)
+        }
+        return 2
+    }
     fun TransferToVO(bathRoomList: List<BathRoom>): List<BathroomVO> {
         logger.info("Transferring to VO")
         val bathroomVOList: List<BathroomVO> = bathRoomList.map { bathRoom ->
