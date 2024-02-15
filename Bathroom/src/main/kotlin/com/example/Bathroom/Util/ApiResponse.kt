@@ -1,4 +1,5 @@
 package com.example.Bathroom.Util
+import com.example.Bathroom.Enum.ReturnCode
 import org.springframework.stereotype.Component
 
 @Component
@@ -29,7 +30,4 @@ data class ApiResponse<T>(
     }
 }
 
-enum class ReturnCode(val code: Int, val message: String) {
-    RC200(200, "OK"),
-    // Add other return codes as needed
-}
+

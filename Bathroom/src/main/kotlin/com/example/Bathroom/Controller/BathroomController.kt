@@ -2,17 +2,13 @@ package com.example.Bathroom.Controller
 
 import com.example.Bathroom.Enum.ReturnCode
 import com.example.Bathroom.Model.DTO.BathroomDTO
-import com.example.Bathroom.Model.VO.BathroomVO
+import com.example.Bathroom.Service.BathroomService
 import com.example.Bathroom.Util.ApiResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import com.example.Bathroom.Service.BathroomService
-import jakarta.servlet.http.HttpServletRequest
-import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import com.example.Bathroom.Util.DateTimeConverter
 import java.time.Instant
 
 @RestController
@@ -26,66 +22,72 @@ class BathroomController(
 
     @GetMapping("/bathrooms")
     fun GetAllBathRoomInfo(): ResponseEntity<Any> {
+        val apiResponse: ApiResponse<Any>
         val bathRoomVOs = bathroomService.GetAllBathrooms()
-        return if (bathRoomVOs.isEmpty()) {
-            val apiResponse: ApiResponse<List<BathroomVO>> = ApiResponse.error(ReturnCode.RC404.code, "No bathrooms found")
-            ResponseEntity(apiResponse, HttpStatus.NOT_FOUND)
+        apiResponse = if (bathRoomVOs.isEmpty()) {
+            ApiResponse.error(ReturnCode.RC404.code, "No bathrooms found")
+
         } else {
-            val apiResponse: ApiResponse<List<BathroomVO>> = ApiResponse.success(bathRoomVOs)
-            ResponseEntity(apiResponse, HttpStatus.OK)
+            ApiResponse.success(bathRoomVOs)
+
         }
+        return ResponseEntity.status(apiResponse.code).body(apiResponse)
     }
+
     @GetMapping("/bathroom")
     fun GetBathRoomInfoById(@RequestParam("number") id: Long): ResponseEntity<Any> {
+        val apiResponse: ApiResponse<Any>
         val bathroomVO = bathroomService.GetBathRoomById(id)
-        return if (bathroomVO == null) {
-            val apiResponse: ApiResponse<Any> = ApiResponse.error(ReturnCode.RC404.code, "No bathroom found")
-            ResponseEntity(apiResponse, HttpStatus.NOT_FOUND)
+        apiResponse = if (bathroomVO == null) {
+            ApiResponse.error(ReturnCode.RC404.code, "No bathroom found")
         } else {
-            val apiResponse = ApiResponse.success(bathroomVO)
-            ResponseEntity(apiResponse, HttpStatus.OK)
+            ApiResponse.success(bathroomVO)
         }
+        return ResponseEntity.status(apiResponse.code).body(apiResponse)
     }
+
     @PostMapping("/add")
     fun AddBathRoomInfo(@RequestBody bathroomDTO: BathroomDTO): ResponseEntity<Any> {
+        val apiResponse: ApiResponse<Any>
         bathroomDTO.createdAt = Instant.now()
         bathroomDTO.modifiedAt = Instant.now()
         val savedBathroom = bathroomService.AddBathRoom(bathroomDTO)
-        return if (savedBathroom == null) {
-            val apiResponse: ApiResponse<Any> = ApiResponse.error(ReturnCode.RC400.code, "Failed to save bathroom")
-            ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST)
+        apiResponse = if (savedBathroom == null) {
+            ApiResponse.error(ReturnCode.RC400.code, "Failed to save bathroom")
         } else {
-            val apiResponse = ApiResponse.success(savedBathroom)
-            ResponseEntity(apiResponse, HttpStatus.OK)
+            ApiResponse.success(savedBathroom)
         }
+        return ResponseEntity.status(apiResponse.code).body(apiResponse)
     }
+
     @PostMapping("/update")
     fun UpdateBathRoomInfo(@RequestBody bathroomDTO: BathroomDTO): ResponseEntity<Any> {
+        val apiResponse: ApiResponse<Any>
         bathroomDTO.modifiedAt = Instant.now()
         val updatedBathroom = bathroomService.UpdateBathRoom(bathroomDTO)
-        return if (updatedBathroom == null) {
-            val apiResponse: ApiResponse<Any> = ApiResponse.error(ReturnCode.RC400.code, "Failed to edit bathroom")
-            ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST)
+        apiResponse = if (updatedBathroom == null) {
+            ApiResponse.error(ReturnCode.RC400.code, "Failed to edit bathroom")
         } else {
-            val apiResponse = ApiResponse.success(updatedBathroom)
-            ResponseEntity(apiResponse, HttpStatus.OK)
+            ApiResponse.success(updatedBathroom)
         }
+        return ResponseEntity.status(apiResponse.code).body(apiResponse)
     }
+
     @DeleteMapping("/delete")
     fun DeleteBathRoomInfo(@RequestParam("number") id: Long): ResponseEntity<Any> {
+        val apiResponse: ApiResponse<Any>
+
         val isDeleted = bathroomService.DeleteBathRoom(id)
         // 0: No bathroom found to delete
         // 1: Bathroom deleted successfully
         // 2: Failed to delete bathroom
-        if (isDeleted == 0) {
-            val apiResponse: ApiResponse<Any> = ApiResponse.error(ReturnCode.RC404.code, "No bathroom found to delete")
-            return ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST)
+        apiResponse = if (isDeleted == 0) {
+            ApiResponse.error(ReturnCode.RC404.code, "No bathroom found to delete")
         } else if (isDeleted == 1) {
-            val apiResponse = ApiResponse.success("Bathroom deleted successfully")
-            return ResponseEntity(apiResponse, HttpStatus.OK)
+            ApiResponse.success("Bathroom deleted successfully")
         } else {
-            val apiResponse: ApiResponse<Any> = ApiResponse.error(ReturnCode.RC400.code, "Failed to delete bathroom")
-            return ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST)
+            ApiResponse.error(ReturnCode.RC400.code, "Failed to delete bathroom")
         }
+        return ResponseEntity.status(apiResponse.code).body(apiResponse)
     }
 }

@@ -23,9 +23,10 @@ class BathroomService(
         return TransferToVO(bathRoomList)
     }
     fun GetBathRoomById(id: Long): BathroomVO? {
-        logger.info("Getting bathroom by ID")
+        logger.info("Getting bathroom by ID: $id")
         val bathRoom: BathRoom? = bathroomRepository.findById(id).orElse(null)
         return if (bathRoom == null) {
+            logger.info("Bathroom not found ID: $id")
             null
         } else {
             val bathroomVO = BathroomVO(
@@ -63,7 +64,7 @@ class BathroomService(
         return null
     }
     fun UpdateBathRoom(bathroomDTO: BathroomDTO) : BathRoom?{
-        logger.info("Updating a bathroom")
+        logger.info("Updating bathroom with ID: ${bathroomDTO.id}")
         try {
             val id = bathroomDTO.id
             if (id == null) {
@@ -88,7 +89,7 @@ class BathroomService(
         return null
     }
     fun DeleteBathRoom(id: Long) : Int {
-        logger.info("Deleting a bathroom")
+        logger.info("Deleting a bathroom with ID: $id")
         try {
             val bathroom = bathroomRepository.findById(id).orElse(null)
             if (bathroom == null) {
@@ -124,6 +125,7 @@ class BathroomService(
                 modifiedAt = DateTimeConverter().dateTimeConvertFromInstant(bathRoom.modifiedAt)
             )
         }
+        logger.info("Transferred to VO")
         return bathroomVOList
     }
 }
