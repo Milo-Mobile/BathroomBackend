@@ -4,6 +4,6 @@
     <option name="defaultUnitInitialized" value="true" />
     <option name="renamerInitialized" value="true" />
     <option name="reverseEngineeringLastDbConnectionId" value="b3934ee0-8037-41f3-9090-e4e6e7a521fa" />
-    <option name="reLastEntityCreationPackage" value="Bathroom/src/main/kotlin/com/example/Bathroom" />
+    <option name="reLastEntityCreationPackage" value="Bathroom/src/main/kotlin/com/example/Bathroom/Model/Entity" />
   </component>
 </project>
