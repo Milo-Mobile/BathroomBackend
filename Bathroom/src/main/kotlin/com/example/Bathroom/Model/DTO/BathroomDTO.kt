@@ -4,13 +4,13 @@ import java.math.BigDecimal
 import java.time.Instant
 
 data class BathroomDTO(
-    var id: Long?,
-    var title: String?,
-    var location: String?,
-    var capacity: Int?,
-    var free: Boolean?,
-    var cost: BigDecimal?,
-    var hours: String?,
-    var createdAt: Instant?,
-    var modifiedAt: Instant?
+    val id: Long?,
+    val title: String?,
+    val location: String?,
+    val capacity: Int?,
+    val free: Boolean?,
+    val cost: BigDecimal?,
+    val hours: String?,
+    val createdAt: Instant?,
+    val modifiedAt: Instant?
 )
